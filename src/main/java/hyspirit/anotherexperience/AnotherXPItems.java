@@ -27,6 +27,6 @@ public class AnotherXPItems {
 	 */
 	public static void registerRecipes(){
 		ItemStack powder = new ItemStack(AnotherXPItems.pureXp);
-		GameRegistry.addShapedRecipe(new ItemStack(AnotherXPItems.keepingOrb, 1, KeepingOrb.getMaxDurability()),"xxx","xyx","xxx", 'x', powder, 'y', new ItemStack(Items.glowstone_dust));
+		GameRegistry.addShapedRecipe(new ItemStack(keepingOrb, 1, keepingOrb.getMaxDamage()),"xxx","xyx","xxx", 'x', powder, 'y', new ItemStack(Items.glowstone_dust));
 	}
 }
