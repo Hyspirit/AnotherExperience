@@ -1,0 +1,16 @@
+[
+{
+  "modid": "anotherxp",
+  "name": "Another Experience",
+  "description": "Add character improvement using vanilla experience system.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Hyspirit"],
+  "credits": " - ",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
