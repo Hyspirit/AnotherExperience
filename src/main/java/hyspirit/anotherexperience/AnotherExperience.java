@@ -41,9 +41,7 @@ public class AnotherExperience {
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event){
-		//Create recipes
-		ItemStack powder = new ItemStack(AnotherXPItems.pureXp);
-		GameRegistry.addShapedRecipe(new ItemStack(AnotherXPItems.keepingOrb, 1, KeepingOrb.getMaxDurability()),"xxx","xyx","xxx", 'x', powder, 'y', new ItemStack(Items.glowstone_dust));
+		AnotherXPItems.registerRecipes();
 		
 		//Register event class
 		MinecraftForge.EVENT_BUS.register(new AnotherXPEventHandler());
