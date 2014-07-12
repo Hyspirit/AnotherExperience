@@ -1,5 +1,7 @@
 package hyspirit.anotherexperience;
 
+import org.lwjgl.input.Keyboard;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -12,17 +14,25 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.network.FMLEventChannel;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
 
 @Mod(modid=AnotherExperience.MODID, name="Another Experience", version=AnotherExperience.VERSION)
 
 public class AnotherExperience {
 	//Usefull variables
 	public static final String MODID = "anotherxp";
-	public static final String VERSION = "0.0.1";
+	public static final String VERSION = "0.1.0";
 	
-	@Instance("Another Experience")
+	@Instance("anotherxp")
 	public static AnotherExperience instance;
+	
+	//Network
+	public static SimpleNetworkWrapper network;
 	
 	//Create a new creative tab
 	public static CreativeTabs creativeTab = new AnotherXPCreativeTabs();
@@ -37,14 +47,26 @@ public class AnotherExperience {
 		
 		//Register new blocks for generation
 		GameRegistry.registerWorldGenerator(new AnotherXPWorldGen(), 0);
+		
+		//Network part
+		network = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
+		network.registerMessage(PacketSkillUpgrade.PacketHandler.class, PacketSkillUpgrade.class, 0, Side.SERVER);
+		network.registerMessage(PacketUpdate.PacketHandler.class, PacketUpdate.class, 1, Side.CLIENT);
 	}
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event){
+		//Register recipes
 		AnotherXPItems.registerRecipes();
+		
+		if(event.getSide().isClient())
+			AnotherXPKeyBinding.init();
 		
 		//Register event class
 		MinecraftForge.EVENT_BUS.register(new AnotherXPEventHandler());
+		
+		//Register gui
+		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GUIHandler());
 	}
 
 	@EventHandler

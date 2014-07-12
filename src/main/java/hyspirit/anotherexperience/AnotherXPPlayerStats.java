@@ -2,6 +2,7 @@ package hyspirit.anotherexperience;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
@@ -28,7 +29,7 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	public static final AnotherXPPlayerStats getPlayerStats(EntityPlayer player){
 		return (AnotherXPPlayerStats) player.getExtendedProperties(PROPERTIES_ID);
 	}
-	
+
 	@Override
 	public void saveNBTData(NBTTagCompound compound) {
 		NBTTagCompound p = new NBTTagCompound();
@@ -43,17 +44,65 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 		NBTTagCompound p = (NBTTagCompound) compound.getTag(PROPERTIES_ID);
 		
 		mining = p.getInteger("mining");
+		System.out.println("Stats du joueur chargées : " + mining);
 	}
 
 	@Override
 	public void init(Entity entity, World world) {
 		// TODO Auto-generated method stub
-		
 	}
 	
-	// Getters and setters
-	public int getMiningLevel(){
-		return mining;
+	/**
+	 * Allow me to use less functions
+	 * @param stat
+	 * @return the skill level, or -1 if skill does not exist
+	 */
+	public int getStatLevel(String stat){
+		if(stat.equals("mining")) return mining;
+		
+		return -1;
+	}
+	
+	public void setStatLevel(String stat, int level){
+		if(level<1) return;
+		
+		if(stat.equals("mining")) mining = level;
+	}
+		
+	/**
+	 * Allow me to use less functions
+	 * @param stat
+	 */
+	public void addStatLevel(String stat){
+		if(stat.equals("mining")) mining++;
+	}
+	
+	/**
+	 * Try to increase the level of sent skill
+	 * @param skill
+	 * @return true if level successfully increased.
+	 */
+	public boolean upgradeSkill(String skill){
+		if(!canUpgrade(skill)) return false;
+		
+		//Reduce the level of the player by the level of the skill +1
+		player.addExperienceLevel(-getStatLevel(skill)-1);
+		addStatLevel(skill);
+		
+		return true;
+	}
+
+	/**
+	 * Is the player able tu upgrade this skill level ?
+	 * @param skill
+	 * @return True if the skill may be upgraded with player's current xp
+	 */
+	public boolean canUpgrade(String skill) {
+		return getStatLevel(skill)+1 <= player.experienceLevel;
+	}
+
+	public void updateClient(EntityPlayerMP player) {
+		AnotherExperience.network.sendTo(new PacketUpdate("mining", this.getStatLevel("mining")), player);
 	}
 
 }
