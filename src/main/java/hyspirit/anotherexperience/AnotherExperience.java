@@ -1,5 +1,7 @@
 package hyspirit.anotherexperience;
 
+import java.util.HashMap;
+
 import org.lwjgl.input.Keyboard;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -36,6 +38,9 @@ public class AnotherExperience {
 	
 	//Create a new creative tab
 	public static CreativeTabs creativeTab = new AnotherXPCreativeTabs();
+	
+	//Store the player stats on death
+	public static HashMap<String, AnotherXPPlayerStats> deadStats = new HashMap();
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event){

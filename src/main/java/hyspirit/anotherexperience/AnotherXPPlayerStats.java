@@ -1,5 +1,7 @@
 package hyspirit.anotherexperience;
 
+import java.util.HashMap;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -12,7 +14,7 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	public static final String PROPERTIES_ID = "AnotherXPPlayerStats";
 	
 	private final EntityPlayer player;
-	
+		
 	private int mining;
 	
 	public AnotherXPPlayerStats(EntityPlayer player){
@@ -93,7 +95,7 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	}
 
 	/**
-	 * Is the player able tu upgrade this skill level ?
+	 * Is the player able to upgrade this skill level ?
 	 * @param skill
 	 * @return True if the skill may be upgraded with player's current xp
 	 */
@@ -103,6 +105,10 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 
 	public void updateClient(EntityPlayerMP player) {
 		AnotherExperience.network.sendTo(new PacketUpdate("mining", this.getStatLevel("mining")), player);
+	}
+	
+	public String toString(){
+		return "{[mining, "+ mining +"]}";
 	}
 
 }
