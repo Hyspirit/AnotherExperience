@@ -9,30 +9,33 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class PacketUpdate implements IMessage {
 
-	private String skill;
-	private int level;
+//	private String skill;
+	private int level[] = new int[AnotherXPPlayerStats.skillName.length];
 	
 	public PacketUpdate(){}
 	
-	public PacketUpdate(String skill, int level){
-		this.skill=skill;
-		this.level=level;
+	public PacketUpdate(AnotherXPPlayerStats stats){
+		for(int i=0; i<level.length; i++)
+			level[i] = stats.getStatLevel(AnotherXPPlayerStats.skillName[i]);
 	}
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		skill= ByteBufUtils.readUTF8String(buf);
-		level = buf.readInt();
+		for(int i=0; i<level.length; i++)
+			level[i] = buf.readInt();
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		ByteBufUtils.writeUTF8String(buf, skill);
-		buf.writeInt(level);
+		for(int i=0; i<level.length; i++)
+			buf.writeInt(level[i]);
 	}
 	
 	public String toString(){
-		return "Packet[" + skill + ", " + level + "]";
+		String s = "{";
+		for(int i=0; i<level.length; i++)
+			s+="[" + AnotherXPPlayerStats.skillName[i] + ", " + level[i] + "]";
+		return s+"}";
 	}
 	
 	public static class PacketHandler implements IMessageHandler<PacketUpdate, IMessage>{
@@ -44,9 +47,14 @@ public class PacketUpdate implements IMessage {
 		 */
 		@Override
 		public IMessage onMessage(PacketUpdate message, MessageContext ctx) {
-			System.out.println(message.toString() +" to " + ctx.side.toString());
+			//Get the stats
+			AnotherXPPlayerStats stats = AnotherXPPlayerStats.getPlayerStats(Minecraft.getMinecraft().thePlayer);
 			
-			AnotherXPPlayerStats.getPlayerStats(Minecraft.getMinecraft().thePlayer).setStatLevel(message.skill, message.level);
+			System.out.println("[AnotherExperience] Updating player stats from data sent by server.");
+			
+			//Update them
+			for(int i=0; i<message.level.length; i++)
+				stats.setStatLevel(AnotherXPPlayerStats.skillName[i], message.level[i]);
 			return null;	//No response
 		}
 

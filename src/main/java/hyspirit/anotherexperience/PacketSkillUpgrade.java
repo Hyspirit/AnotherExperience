@@ -41,8 +41,6 @@ public class PacketSkillUpgrade implements IMessage {
 		 */
 		@Override
 		public IMessage onMessage(PacketSkillUpgrade message, MessageContext ctx) {
-			System.out.println(message.toString() +" to " + ctx.side.toString());
-			
 			AnotherXPPlayerStats playerStats = AnotherXPPlayerStats.getPlayerStats(ctx.getServerHandler().playerEntity);
 			playerStats.upgradeSkill(message.skill);
 			return null;	//No response

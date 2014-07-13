@@ -15,12 +15,15 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	public static final String PROPERTIES_ID = "AnotherXPPlayerStats";
 	
 	private final EntityPlayer player;
-		
-	private int mining;
+	
+	//I want the skill names to be public, but not theirs levels, so... And I don't need the skill name in all instances ;)
+	public static final String[] skillName = {"mining", "digging"};
+	private int[] skillLevel = new int[skillName.length];
 	
 	public AnotherXPPlayerStats(EntityPlayer player){
 		this.player=player;
-		mining=0;
+		for(int i=0; i<skillName.length; i++)
+			skillLevel[i]=0;
 	}
 	
 	//Add these properties to a player
@@ -37,7 +40,8 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	public void saveNBTData(NBTTagCompound compound) {
 		NBTTagCompound p = new NBTTagCompound();
 		
-		p.setInteger("mining", mining);
+		for(int i=0; i<skillName.length; i++)
+			p.setInteger(skillName[i], skillLevel[i]);
 		
 		compound.setTag(PROPERTIES_ID, p);
 	}
@@ -46,8 +50,8 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	public void loadNBTData(NBTTagCompound compound) {
 		NBTTagCompound p = (NBTTagCompound) compound.getTag(PROPERTIES_ID);
 		
-		mining = p.getInteger("mining");
-		System.out.println("Stats du joueur chargées : " + mining);
+		for(int i=0; i<skillName.length; i++)
+			skillLevel[i] = p.getInteger(skillName[i]);
 	}
 
 	@Override
@@ -61,15 +65,24 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	 * @return the skill level, or -1 if skill does not exist
 	 */
 	public int getStatLevel(String stat){
-		if(stat.equals("mining")) return mining;
 		
+		for(int i=0; i<skillName.length; i++)
+			if(stat.equals(skillName[i]))
+				return skillLevel[i];
+		
+		System.out.println("[AnotherExperience] A method sent an unknown skill name to getStatLevel.");
 		return -1;
 	}
 	
 	public void setStatLevel(String stat, int level){
 		if(level<1) return;
 		
-		if(stat.equals("mining")) mining = level;
+		for(int i=0; i<skillName.length; i++)
+			if(stat.equals(skillName[i])){
+				skillLevel[i] = level;
+				return;
+			}
+		System.out.println("[AnotherExperience] A method sent an unknown skill name to setStatLevel.");
 	}
 		
 	/**
@@ -77,7 +90,12 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	 * @param stat
 	 */
 	public void addStatLevel(String stat){
-		if(stat.equals("mining")) mining++;
+		for(int i=0; i<skillName.length; i++)
+			if(stat.equals(skillName[i])){
+				skillLevel[i]++;
+				return;
+			}
+		System.out.println("[AnotherExperience] A method sent an unknown skill name to addStatLevel.");
 	}
 	
 	/**
@@ -105,11 +123,14 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	}
 
 	public void updateClient(EntityPlayerMP player) {
-		AnotherExperience.network.sendTo(new PacketUpdate("mining", this.getStatLevel("mining")), player);
+		AnotherExperience.network.sendTo(new PacketUpdate(this), player);
 	}
 	
 	public String toString(){
-		return "{[mining, "+ mining +"]}";
+		String s = "{";
+		for(int i=0; i<skillName.length; i++)
+			s+="[" + skillName[i] + ", " + skillLevel[i] + "]";
+		return s+"}";
 	}
 
 	/**
@@ -119,7 +140,9 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	 */
 	public float getBreakingSpeed(Block block) {
 		if(block.getHarvestTool(0)=="pickaxe") 
-			return mining*mining*0.1F;
+			return skillLevel[0]*skillLevel[0]*0.1F;
+		if(block.getHarvestTool(0)=="shovel")
+			return skillLevel[1]*skillLevel[1]*0.05F;
 		
 		return 0;
 	}

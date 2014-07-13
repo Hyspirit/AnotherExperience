@@ -7,9 +7,7 @@ import net.minecraft.client.gui.GuiScreen;
 public class GUIExperience extends GuiScreen {
 	public static final int GUI_ID = 0;
 	
-	public GUIExperience(){
-		
-	}
+	public GUIExperience(){}
 	
 	public void initGui(){
 		AnotherXPPlayerStats stats = AnotherXPPlayerStats.getPlayerStats(Minecraft.getMinecraft().thePlayer);
@@ -21,9 +19,17 @@ public class GUIExperience extends GuiScreen {
 		button = new GuiButton(0, width/2-100, height-height/8-10, 200, 20, "Back");
 		buttonList.add(button);
 		
-		button = new GuiButton(1, 10, 10, "Mining (" + stats.getStatLevel("mining") + ")");
-		button.enabled=stats.canUpgrade("mining");
-		buttonList.add(button);
+		for(int i=0; i<stats.skillName.length; i++){
+			button = new GuiButton(1, width/10, 10+i*30, width/3, 20, stats.skillName[i] + " (" + stats.getStatLevel(stats.skillName[i]) + ")");
+			button.enabled=stats.canUpgrade(stats.skillName[i]);
+			buttonList.add(button);
+			
+			if(i++>=stats.skillName.length) break;
+			
+			button = new GuiButton(1, width/2+width/10, 10+(i-1)*30, width/3, 20, stats.skillName[i] + " (" + stats.getStatLevel(stats.skillName[i]) + ")");
+			button.enabled=stats.canUpgrade(stats.skillName[i]);
+			buttonList.add(button);
+		}
 	}
 	
 	public void drawScreen(int x, int y, float par3){
@@ -53,7 +59,7 @@ public class GUIExperience extends GuiScreen {
 			return;
 		}
 		stats.upgradeSkill(skill);
-		button.displayString=skill + "(" + stats.getStatLevel(skill) + ")";
+		button.displayString=skill + " (" + stats.getStatLevel(skill) + ")";
 		
 		AnotherExperience.network.sendToServer(new PacketSkillUpgrade(skill, stats.getStatLevel(skill)));
 	}
