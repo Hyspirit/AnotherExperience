@@ -19,11 +19,9 @@ public class AnotherXPEventHandler {
 	 */
 	@SubscribeEvent
 	public void onPlayerBreakingBlock(PlayerEvent.BreakSpeed event){
-		//Get player stats
-		AnotherXPPlayerStats stats = AnotherXPPlayerStats.getPlayerStats(event.entityPlayer);
-		//Modify his speed
-		if(event.block.getHarvestTool(0)=="pickaxe" && event.originalSpeed>1.0F) 
-			event.newSpeed+=(float) stats.getStatLevel("mining")*5;
+		if(!(event.entity instanceof EntityPlayer) || AnotherXPPlayerStats.getPlayerStats(event.entityPlayer)==null) return;
+		
+		event.newSpeed+=AnotherXPPlayerStats.getPlayerStats(event.entityPlayer).getBreakingSpeed(event.block);
 	}
 	
 	/**

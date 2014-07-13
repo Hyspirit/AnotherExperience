@@ -2,6 +2,7 @@ package hyspirit.anotherexperience;
 
 import java.util.HashMap;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -109,6 +110,18 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	
 	public String toString(){
 		return "{[mining, "+ mining +"]}";
+	}
+
+	/**
+	 * Used to get the player's breaking speed against a block
+	 * @param block
+	 * @return The bonus breaking speed
+	 */
+	public float getBreakingSpeed(Block block) {
+		if(block.getHarvestTool(0)=="pickaxe") 
+			return mining*mining*0.1F;
+		
+		return 0;
 	}
 
 }

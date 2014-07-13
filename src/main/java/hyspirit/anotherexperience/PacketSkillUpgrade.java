@@ -43,8 +43,6 @@ public class PacketSkillUpgrade implements IMessage {
 		public IMessage onMessage(PacketSkillUpgrade message, MessageContext ctx) {
 			System.out.println(message.toString() +" to " + ctx.side.toString());
 			
-			System.out.println(AnotherXPPlayerStats.getPlayerStats(ctx.getServerHandler().playerEntity).getStatLevel("mining"));
-			
 			AnotherXPPlayerStats playerStats = AnotherXPPlayerStats.getPlayerStats(ctx.getServerHandler().playerEntity);
 			playerStats.upgradeSkill(message.skill);
 			return null;	//No response

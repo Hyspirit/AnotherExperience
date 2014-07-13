@@ -14,7 +14,14 @@ public class GUIExperience extends GuiScreen {
 	public void initGui(){
 		AnotherXPPlayerStats stats = AnotherXPPlayerStats.getPlayerStats(Minecraft.getMinecraft().thePlayer);
 		
-		GuiButton button = new GuiButton(0, 10, 10, "Mining (" + stats.getStatLevel("mining") + ")");
+		GuiButton button;
+		//new GuiButton(id, x, y, width, height, "display");
+		//new GuiButton(id, x, y, "display");
+		//Buttons have problems to display greater than w:200 and h:20, so stay under it.
+		button = new GuiButton(0, width/2-100, height-height/8-10, 200, 20, "Back");
+		buttonList.add(button);
+		
+		button = new GuiButton(1, 10, 10, "Mining (" + stats.getStatLevel("mining") + ")");
 		button.enabled=stats.canUpgrade("mining");
 		buttonList.add(button);
 	}
@@ -36,12 +43,14 @@ public class GUIExperience extends GuiScreen {
 		
 		switch(button.id){
 		case 0:
+			Minecraft.getMinecraft().thePlayer.closeScreen();
+			return;
+		case 1:
 			skill = "mining";
 			break;
 		
 		default:
-			skill = "";
-			break;
+			return;
 		}
 		stats.upgradeSkill(skill);
 		button.displayString=skill + "(" + stats.getStatLevel(skill) + ")";
