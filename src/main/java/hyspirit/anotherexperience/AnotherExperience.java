@@ -79,6 +79,11 @@ public class AnotherExperience {
 
 	}
 	
+	@EventHandler
+	public void serverStarting(FMLServerStartingEvent event){
+		event.registerServerCommand(new CommandSetSkillLevel());
+	}
+	
 	/**
      * Remove experience from the player.
      * I copied the method EntityPlayer.addExperience and modified it.

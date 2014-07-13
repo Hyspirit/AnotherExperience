@@ -21,7 +21,7 @@ public class AnotherXPEventHandler {
 	public void onPlayerBreakingBlock(PlayerEvent.BreakSpeed event){
 		if(!(event.entity instanceof EntityPlayer) || AnotherXPPlayerStats.getPlayerStats(event.entityPlayer)==null) return;
 		
-		event.newSpeed+=AnotherXPPlayerStats.getPlayerStats(event.entityPlayer).getBreakingSpeed(event.block);
+		event.newSpeed*=AnotherXPPlayerStats.getPlayerStats(event.entityPlayer).getBreakingSpeed(event.block);
 	}
 	
 	/**
@@ -50,7 +50,7 @@ public class AnotherXPEventHandler {
 		
 		//Check if player was dead, if he was, then load properties.
 		if(stat != null)
-			AnotherXPPlayerStats.getPlayerStats((EntityPlayer) e.entity).setStatLevel("mining", stat.getStatLevel("mining"));
+			AnotherXPPlayerStats.getPlayerStats((EntityPlayer) e.entity).setStatLevel("Mining", stat.getStatLevel("Mining"));
 		
 		//Finally, update the client
 		AnotherXPPlayerStats.getPlayerStats((EntityPlayer) e.entity).updateClient((EntityPlayerMP) e.entity);

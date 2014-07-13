@@ -17,7 +17,7 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	private final EntityPlayer player;
 	
 	//I want the skill names to be public, but not theirs levels, so... And I don't need the skill name in all instances ;)
-	public static final String[] skillName = {"mining", "digging"};
+	public static final String[] skillName = {"Mining", "Digging", "Tree felling"};
 	private int[] skillLevel = new int[skillName.length];
 	
 	public AnotherXPPlayerStats(EntityPlayer player){
@@ -75,7 +75,7 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	}
 	
 	public void setStatLevel(String stat, int level){
-		if(level<1) return;
+		if(level<0) level = 0;
 		
 		for(int i=0; i<skillName.length; i++)
 			if(stat.equals(skillName[i])){
@@ -135,16 +135,19 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 
 	/**
 	 * Used to get the player's breaking speed against a block
+	 * Returned value will be multiplicated by the original breakspeed
 	 * @param block
 	 * @return The bonus breaking speed
 	 */
 	public float getBreakingSpeed(Block block) {
 		if(block.getHarvestTool(0)=="pickaxe") 
-			return skillLevel[0]*skillLevel[0]*0.1F;
+			return 0.8f+skillLevel[0]*0.03f;
 		if(block.getHarvestTool(0)=="shovel")
-			return skillLevel[1]*skillLevel[1]*0.05F;
+			return 0.5f+skillLevel[1]*skillLevel[1]*0.05f;
+		if(block.getHarvestTool(0)=="axe")
+			return 0.7f+skillLevel[2]*0.04f;
 		
-		return 0;
+		return 0f;
 	}
 
 }

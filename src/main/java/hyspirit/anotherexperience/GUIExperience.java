@@ -24,7 +24,7 @@ public class GUIExperience extends GuiScreen {
 			button.enabled=stats.canUpgrade(stats.skillName[i]);
 			buttonList.add(button);
 			
-			if(i++>=stats.skillName.length) break;
+			if(++i>=stats.skillName.length) break;
 			
 			button = new GuiButton(1, width/2+width/10, 10+(i-1)*30, width/3, 20, stats.skillName[i] + " (" + stats.getStatLevel(stats.skillName[i]) + ")");
 			button.enabled=stats.canUpgrade(stats.skillName[i]);
@@ -52,7 +52,7 @@ public class GUIExperience extends GuiScreen {
 			Minecraft.getMinecraft().thePlayer.closeScreen();
 			return;
 		case 1:
-			skill = "mining";
+			skill = "Mining";
 			break;
 		
 		default:
