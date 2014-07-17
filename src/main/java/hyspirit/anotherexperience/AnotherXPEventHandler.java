@@ -6,6 +6,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -22,6 +25,20 @@ public class AnotherXPEventHandler {
 		if(!(event.entity instanceof EntityPlayer) || AnotherXPPlayerStats.getPlayerStats(event.entityPlayer)==null) return;
 		
 		event.newSpeed*=AnotherXPPlayerStats.getPlayerStats(event.entityPlayer).getBreakingSpeed(event.block);
+//		System.out.println("Harvest level : " + event.block.getHarvestLevel(0));
+//		System.out.println("Harvest tool : " + event.block.getHarvestTool(0));
+//		System.out.println("Can harvest block : " + event.entityPlayer.getHeldItem().getItem().canHarvestBlock(event.block, event.entityPlayer.getItemInUse()));
+//		System.out.println(net.minecraftforge.oredict.OreDictionary.getOreID("logWood"));
+		net.minecraft.item.ItemStack s = new net.minecraft.item.ItemStack(event.block);
+		try{
+		 int []ids = net.minecraftforge.oredict.OreDictionary.getOreIDs(s);
+		 for(int i=0; i<ids.length; i++)
+		System.out.println(ids[i]);
+		}
+		catch(NullPointerException e){
+			System.out.println("Nul pointer.");
+		}
+		
 	}
 	
 	/**

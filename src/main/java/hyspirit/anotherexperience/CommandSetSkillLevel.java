@@ -44,19 +44,20 @@ public class CommandSetSkillLevel implements ICommand {
 		}
 		else{
 			if(arguments[1].equals("Tree_felling")) arguments[1]="Tree felling";
-			EntityPlayer p = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(arguments[0]);
+//			EntityPlayer p = sender.getEntityWorld().getPlayerEntityByName(arguments[0]);	//I think that this will only work for players in the same world as the command sender
+			EntityPlayer p = MinecraftServer.getServer().getEntityWorld().getPlayerEntityByName(arguments[0]);
 			if(p==null){
 				sender.addChatMessage(new ChatComponentText("This player does not exist."));
 				return;
 			}
-			AnotherXPPlayerStats.getPlayerStats(p).setStatLevel(arguments[1], Integer.valueOf(arguments[1]));
+			AnotherXPPlayerStats.getPlayerStats(p).setStatLevel(arguments[1], Integer.valueOf(arguments[2]));
 			AnotherXPPlayerStats.getPlayerStats(p).updateClient((EntityPlayerMP) p);
 		}
 	}
 
 	@Override
 	public boolean canCommandSenderUseCommand(ICommandSender sender) {
-		return MinecraftServer.getServer().getConfigurationManager().isPlayerOpped(sender.getCommandSenderName());
+		return sender.canCommandSenderUseCommand(0, "op");	//Little workaround, didn't found how to check if player is server operator...
 	}
 
 	@Override
