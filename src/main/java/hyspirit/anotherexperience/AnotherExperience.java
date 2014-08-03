@@ -29,6 +29,7 @@ public class AnotherExperience {
 	//Usefull variables
 	public static final String MODID = "anotherxp";
 	public static final String VERSION = "0.1.0";
+	public static int nbWood = 5;
 	
 	@Instance("anotherxp")
 	public static AnotherExperience instance;

@@ -16,6 +16,7 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	
 	private final EntityPlayer player;
 	
+	//TODO create new skill to separate wood gathering speed and tree felling
 	//I want the skill names to be public, but not theirs levels, so... And I don't need the skill name in all instances ;)
 	public static final String[] skillName = {"Mining", "Digging", "Tree felling"};
 	private int[] skillLevel = new int[skillName.length];

@@ -16,17 +16,17 @@ public class GUIExperience extends GuiScreen {
 		//new GuiButton(id, x, y, width, height, "display");
 		//new GuiButton(id, x, y, "display");
 		//Buttons have problems to display greater than w:200 and h:20, so stay under it.
-		button = new GuiButton(0, width/2-100, height-height/8-10, 200, 20, "Back");
+		button = new GuiButton(-1, width/2-100, height-height/8-10, 200, 20, "Back");
 		buttonList.add(button);
 		
 		for(int i=0; i<stats.skillName.length; i++){
-			button = new GuiButton(1, width/10, 10+i*30, width/3, 20, stats.skillName[i] + " (" + stats.getStatLevel(stats.skillName[i]) + ")");
+			button = new GuiButton(i, width/10, 10+i*30, width/3, 20, stats.skillName[i] + " (" + stats.getStatLevel(stats.skillName[i]) + ")");
 			button.enabled=stats.canUpgrade(stats.skillName[i]);
 			buttonList.add(button);
 			
 			if(++i>=stats.skillName.length) break;
 			
-			button = new GuiButton(1, width/2+width/10, 10+(i-1)*30, width/3, 20, stats.skillName[i] + " (" + stats.getStatLevel(stats.skillName[i]) + ")");
+			button = new GuiButton(i, width/2+width/10, 10+(i-1)*30, width/3, 20, stats.skillName[i] + " (" + stats.getStatLevel(stats.skillName[i]) + ")");
 			button.enabled=stats.canUpgrade(stats.skillName[i]);
 			buttonList.add(button);
 		}
@@ -47,17 +47,13 @@ public class GUIExperience extends GuiScreen {
 		AnotherXPPlayerStats stats = (AnotherXPPlayerStats) Minecraft.getMinecraft().thePlayer.getExtendedProperties(AnotherXPPlayerStats.PROPERTIES_ID);
 		String skill;
 		
-		switch(button.id){
-		case 0:
+		if(button.id==-1){
 			Minecraft.getMinecraft().thePlayer.closeScreen();
 			return;
-		case 1:
-			skill = "Mining";
-			break;
-		
-		default:
-			return;
 		}
+		
+		skill = AnotherXPPlayerStats.skillName[button.id];
+		
 		stats.upgradeSkill(skill);
 		button.displayString=skill + " (" + stats.getStatLevel(skill) + ")";
 		

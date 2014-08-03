@@ -4,17 +4,25 @@ import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class AnotherXPEventHandler {
+	
+	private static int harvestStackCounter=0;
+	private static int playerTreeFellingLevel;
 	
 	/**
 	 * Used to modify breaking speed of players accordingly to their experience level
@@ -25,20 +33,67 @@ public class AnotherXPEventHandler {
 		if(!(event.entity instanceof EntityPlayer) || AnotherXPPlayerStats.getPlayerStats(event.entityPlayer)==null) return;
 		
 		event.newSpeed*=AnotherXPPlayerStats.getPlayerStats(event.entityPlayer).getBreakingSpeed(event.block);
-//		System.out.println("Harvest level : " + event.block.getHarvestLevel(0));
-//		System.out.println("Harvest tool : " + event.block.getHarvestTool(0));
-//		System.out.println("Can harvest block : " + event.entityPlayer.getHeldItem().getItem().canHarvestBlock(event.block, event.entityPlayer.getItemInUse()));
-//		System.out.println(net.minecraftforge.oredict.OreDictionary.getOreID("logWood"));
-		net.minecraft.item.ItemStack s = new net.minecraft.item.ItemStack(event.block);
-		try{
-		 int []ids = net.minecraftforge.oredict.OreDictionary.getOreIDs(s);
-		 for(int i=0; i<ids.length; i++)
-		System.out.println(ids[i]);
-		}
-		catch(NullPointerException e){
-			System.out.println("Nul pointer.");
-		}
+	}
+	
+	/**
+	 * Called when a block is about to drop it's loots
+	 * Remember : calling harvestBlock call this again
+	 * @param event
+	 */
+	@SubscribeEvent
+	public void onPlayerHarvestingBlock(BlockEvent.HarvestDropsEvent event){
+		boolean isInArray=false;
 		
+		if(event.harvester==null) return;	//Blocks can drop their items without needing a player to break them
+		
+		int []ids = OreDictionary.getOreIDs(new ItemStack(event.block));	//Get the ids of harvested block
+		if(ids.length==0) return;
+		// Check if it is wood (id=0)
+		for(int i=0; i<ids.length; i++)
+			if(ids[i]==0) isInArray=true;
+		if(isInArray==false) return;
+		
+		event.world.setBlockToAir(event.x, event.y, event.z);	// Remove the block from the world
+
+		if(harvestStackCounter<=0)
+			playerTreeFellingLevel=AnotherXPPlayerStats.getPlayerStats(event.harvester).getStatLevel(AnotherXPPlayerStats.skillName[2]);
+		// TODO Make the range depend on the player's skill
+		//Now try to harvest near blocks
+		harvestStackCounter++;
+		harvestNearWoodLog(event.world, event.harvester, event.x+1, event.y, event.z);
+		harvestNearWoodLog(event.world, event.harvester, event.x-1, event.y, event.z);
+		harvestNearWoodLog(event.world, event.harvester, event.x, event.y+1, event.z);
+		harvestNearWoodLog(event.world, event.harvester, event.x, event.y-1, event.z);
+		harvestNearWoodLog(event.world, event.harvester, event.x, event.y, event.z+1);
+		harvestNearWoodLog(event.world, event.harvester, event.x, event.y, event.z-1);
+		harvestStackCounter--;
+	}
+	
+	/**
+	 * Check if the target block is a wood log AND harvest it 
+	 * @param world The world the block is in
+	 * @param harvester The player which is trying to harvest
+	 * @param x The x coordinate of the block
+	 * @param y The y coordinate of the block
+	 * @param z The z coordinate of the block
+	 */
+	private void harvestNearWoodLog(World world, EntityPlayer harvester, int x, int y, int z){
+		if(playerTreeFellingLevel<=0) return;
+		
+		boolean isInArray=false;	// Used to check if it is wood
+		
+		Block b = world.getBlock(x, y, z);	//Get the next block to destroy
+		int[] ids = OreDictionary.getOreIDs(new ItemStack(b));	// Get the ID of the block
+		if(ids.length==0) return;	//If the block has no id, it can't be wood (or it is incorectly registerd in the OreDict)
+		
+		// Check if it is wood (id=0)
+		for(int i=0; i<ids.length; i++)
+			if(ids[i]==0) isInArray=true;
+		if(isInArray==false) return;
+		
+		playerTreeFellingLevel--;
+		b.harvestBlock(world, harvester, x, y, z, b.getDamageValue(world, x, y, z));	//Only drop the item, doesn't destroy the block? ALSO call THIS method again
+		if(harvester.getCurrentEquippedItem()!=null) harvester.getCurrentEquippedItem().attemptDamageItem(1, world.rand);	// Damage the use item ;)
 	}
 	
 	/**
