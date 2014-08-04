@@ -16,9 +16,8 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	
 	private final EntityPlayer player;
 	
-	//TODO create new skill to separate wood gathering speed and tree felling
 	//I want the skill names to be public, but not theirs levels, so... And I don't need the skill name in all instances ;)
-	public static final String[] skillName = {"Mining", "Digging", "Tree felling"};
+	public static final String[] skillName = {"Mining", "Digging", "Tree felling", "Woodcutting"};
 	private int[] skillLevel = new int[skillName.length];
 	
 	public AnotherXPPlayerStats(EntityPlayer player){
@@ -136,17 +135,17 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 
 	/**
 	 * Used to get the player's breaking speed against a block
-	 * Returned value will be multiplicated by the original breakspeed
+	 * Returned value will be multiplicated by the original breakspeed (So other mods can affect it too)
 	 * @param block
 	 * @return The bonus breaking speed
 	 */
 	public float getBreakingSpeed(Block block) {
 		if(block.getHarvestTool(0)=="pickaxe") 
-			return 0.8f+skillLevel[0]*0.03f;
+			return 0.8f+skillLevel[0]*0.03f;	//Mining
 		if(block.getHarvestTool(0)=="shovel")
-			return 0.5f+skillLevel[1]*skillLevel[1]*0.05f;
+			return 0.5f+skillLevel[1]*skillLevel[1]*0.05f;	//Digging
 		if(block.getHarvestTool(0)=="axe")
-			return 0.7f+skillLevel[2]*0.04f;
+			return 0.7f+skillLevel[3]*0.04f;	//Woodcutting
 		
 		return 0f;
 	}
