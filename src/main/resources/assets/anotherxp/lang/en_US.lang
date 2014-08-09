@@ -4,3 +4,6 @@ item.keepingOrb.name=Keeping orb
 item.pureXP.name=Pure experience
 
 itemGroup.AnotherXP=AnotherXP
+
+key.categories.anotherxp=Another Experience
+key.spendxp=Level GUI
