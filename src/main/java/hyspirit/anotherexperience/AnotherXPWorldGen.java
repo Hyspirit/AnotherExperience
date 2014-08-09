@@ -1,4 +1,11 @@
+/**
+ * Add my blocks to the worldgen.
+ * 
+ * @author Hyspirit
+ */
 package hyspirit.anotherexperience;
+
+import hyspirit.anotherexperience.blocks.AnotherXPBlocks;
 
 import java.util.Random;
 

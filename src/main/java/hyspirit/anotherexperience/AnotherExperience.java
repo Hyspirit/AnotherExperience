@@ -1,4 +1,15 @@
+/**
+ * Main class of the mod.
+ * Register everything (items, blocks, recipes, gui, event handler...)
+ * 
+ * @author Hyspirit
+ */
 package hyspirit.anotherexperience;
+
+import hyspirit.anotherexperience.blocks.AnotherXPBlocks;
+import hyspirit.anotherexperience.gui.GUIHandler;
+import hyspirit.anotherexperience.items.AnotherXPItems;
+import hyspirit.anotherexperience.network.*;
 
 import java.util.HashMap;
 

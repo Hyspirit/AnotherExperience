@@ -1,4 +1,9 @@
-package hyspirit.anotherexperience;
+/**
+ * Called when a player want to access a GUI, return the wished GUI.
+ * 
+ * @author Hyspirit
+ */
+package hyspirit.anotherexperience.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;

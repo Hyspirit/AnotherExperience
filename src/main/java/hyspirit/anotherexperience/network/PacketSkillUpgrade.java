@@ -1,6 +1,14 @@
-package hyspirit.anotherexperience;
+/**
+ * The PacketSkillUpgrade is used to notify the server when a player is trying to upgrade one of his skills.
+ * Only one information is sent to the server, which mean this packet should be lighter compared to PacketUpdate.
+ * TODO : change the String to an int, will make it even lighter.
+ * 
+ * @author Hyspirit
+ */
+package hyspirit.anotherexperience.network;
 
 import net.minecraft.client.Minecraft;
+import hyspirit.anotherexperience.AnotherXPPlayerStats;
 import io.netty.buffer.ByteBuf;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;

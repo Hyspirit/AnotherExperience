@@ -1,8 +1,16 @@
+/**
+ * This class is attached to all players, and it define their stats, which change their game experience according to their level in these stats.
+ * 
+ * @author Hyspirit
+ */
 package hyspirit.anotherexperience;
+
+import hyspirit.anotherexperience.network.PacketUpdate;
 
 import java.util.HashMap;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -19,6 +27,7 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	//I want the skill names to be public, but not theirs levels, so... And I don't need the skill name in all instances ;)
 	public static final String[] skillName = {"Mining", "Digging", "Tree felling", "Woodcutting"};
 	private int[] skillLevel = new int[skillName.length];
+	private int[] passiveExperience = new int[skillName.length];
 	
 	public AnotherXPPlayerStats(EntityPlayer player){
 		this.player=player;
@@ -122,6 +131,34 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 		return getStatLevel(skill)+1 <= player.experienceLevel;
 	}
 
+	
+	// - - - - - Passive experience related methods - - - - - 
+	/**
+	 * Add passive experience to the skill
+	 * @param skill The skill you want to add passive experience
+	 * @param amount The amount of experience to add
+	 */
+	public void addPassiveExperience(String skill, int amount){
+		for(int i=0; i<skillName.length; i++)
+			if(skill.equals(skillName[i])){
+				passiveExperience[i]+=amount;
+				if(passiveExperience[i]>=50){
+					passiveExperience[i]=0;
+					addStatLevel(skillName[i]);
+					updateClient((EntityPlayerMP) player);
+				}
+				System.out.println("Passive level increased : " + skillName[i] + " - " + passiveExperience[i]);
+				break;
+			}
+		
+	}
+	
+	// - - - - - End of Passive experience related methods - - - - -
+	
+	/**
+	 * Update the client with his correct stats.
+	 * @param player The player to update
+	 */
 	public void updateClient(EntityPlayerMP player) {
 		AnotherExperience.network.sendTo(new PacketUpdate(this), player);
 	}

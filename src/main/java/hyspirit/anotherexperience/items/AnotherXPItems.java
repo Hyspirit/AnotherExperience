@@ -1,4 +1,9 @@
-package hyspirit.anotherexperience;
+/**
+ * This class create, register and keep a reference to all items added by the mod.
+ * 
+ * @author Hyspirit
+ */
+package hyspirit.anotherexperience.items;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.init.Items;

@@ -1,5 +1,13 @@
-package hyspirit.anotherexperience;
+/**
+ * Contain all informations about the level managing GUI (define buttons, what they do...)
+ * 
+ * @author Hyspirit
+ */
+package hyspirit.anotherexperience.gui;
 
+import hyspirit.anotherexperience.AnotherExperience;
+import hyspirit.anotherexperience.AnotherXPPlayerStats;
+import hyspirit.anotherexperience.network.PacketSkillUpgrade;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;

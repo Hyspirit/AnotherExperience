@@ -1,3 +1,8 @@
+/**
+ * Handle all the events needed by the mod (Block harvested/being mined...)
+ * 
+ * @author Hyspirit
+ */
 package hyspirit.anotherexperience;
 
 import cpw.mods.fml.common.eventhandler.EventPriority;
@@ -42,9 +47,22 @@ public class AnotherXPEventHandler {
 	 */
 	@SubscribeEvent
 	public void onPlayerHarvestingBlock(BlockEvent.HarvestDropsEvent event){
-		boolean isInArray=false;
-		
 		if(event.harvester==null) return;	//Blocks can drop their items without needing a player to break them
+		
+		harvestWoodLogs(event);	// Test if the player is harvesting wood, and if so, auto harvest near wood logs.
+		
+		// Now, check which type of block is harvested, and add passive experience to player
+		if(event.block.getHarvestTool(0).equals("pickaxe")) AnotherXPPlayerStats.getPlayerStats(event.harvester).addPassiveExperience("Mining", 1);
+		else if(event.block.getHarvestTool(0).equals("shovel")) AnotherXPPlayerStats.getPlayerStats(event.harvester).addPassiveExperience("Digging", 1);
+		else if(event.block.getHarvestTool(0).equals("axe")) AnotherXPPlayerStats.getPlayerStats(event.harvester).addPassiveExperience("Woodcutting", 1);
+	}
+	
+	/**
+	 * Test if the player is harvesting wood, and if so, auto harvest near wood logs.
+	 * @param event The HarvestDropEvent sent to the function watching harvest events.
+	 */
+	private void harvestWoodLogs(BlockEvent.HarvestDropsEvent event){
+		boolean isInArray=false;
 		
 		int []ids = OreDictionary.getOreIDs(new ItemStack(event.block));	//Get the ids of harvested block
 		if(ids.length==0) return;
@@ -84,7 +102,7 @@ public class AnotherXPEventHandler {
 		
 		Block b = world.getBlock(x, y, z);	//Get the next block to destroy
 		int[] ids = OreDictionary.getOreIDs(new ItemStack(b));	// Get the ID of the block
-		if(ids.length==0) return;	//If the block has no id, it can't be wood (or it is incorectly registerd in the OreDict)
+		if(ids.length==0) return;	//If the block has no id, it can't be wood (or it is incorrectly registered in the OreDict)
 		
 		// Check if it is wood (id=0)
 		for(int i=0; i<ids.length; i++)

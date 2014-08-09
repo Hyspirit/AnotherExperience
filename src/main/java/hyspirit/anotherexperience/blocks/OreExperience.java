@@ -1,4 +1,12 @@
-package hyspirit.anotherexperience;
+/**
+ * Define the block 'OreExperience', which drop pureXP, and glow a bit.
+ * 
+ * @author Hyspirit
+ */
+package hyspirit.anotherexperience.blocks;
+
+import hyspirit.anotherexperience.AnotherExperience;
+import hyspirit.anotherexperience.items.AnotherXPItems;
 
 import java.util.ArrayList;
 import java.util.Random;

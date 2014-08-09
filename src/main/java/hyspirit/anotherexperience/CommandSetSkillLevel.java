@@ -1,3 +1,11 @@
+/**
+ * Add the /setSkillLevel command, which allow to change the level of a certain skill of a player.
+ * May be used like so :
+ * 	/setSkillLevel Mining 10 (Set the level of Mining to 10 for the player who entered this command)
+ * 	/setSkillLevel Player555 Digging 5 (Set the level of Digging to 5 for Player555)
+ * 
+ * @author Hyspirit
+ */
 package hyspirit.anotherexperience;
 
 import java.util.List;

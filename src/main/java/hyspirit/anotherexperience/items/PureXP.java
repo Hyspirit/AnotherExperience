@@ -1,5 +1,11 @@
-package hyspirit.anotherexperience;
+/**
+ * The pureXP item is dropped by the OreExperience, and can be used by right-click to give the player some experience.
+ * 
+ * @author Hyspirit
+ */
+package hyspirit.anotherexperience.items;
 
+import hyspirit.anotherexperience.AnotherExperience;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

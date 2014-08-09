@@ -1,3 +1,8 @@
+/**
+ * Set the key used by the mod.
+ * 
+ * @author Hyspirit
+ */
 package hyspirit.anotherexperience;
 
 import org.lwjgl.input.Keyboard;

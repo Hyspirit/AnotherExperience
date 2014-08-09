@@ -1,4 +1,12 @@
-package hyspirit.anotherexperience;
+/**
+ * Generalized class for an experience storing item, which allow to create a lot of different just with one class.
+ * The amount of experience the item can store, his durability and the storing 'fee' are customizable.
+ * 
+ * @author Hyspirit
+ */
+package hyspirit.anotherexperience.items;
+
+import hyspirit.anotherexperience.AnotherExperience;
 
 import java.util.List;
 
