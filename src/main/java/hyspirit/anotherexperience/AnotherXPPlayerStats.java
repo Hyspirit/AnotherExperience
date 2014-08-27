@@ -24,15 +24,21 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	
 	private final EntityPlayer player;
 	
+	private static boolean isPassiveExperienceActivated;
+	
 	//I want the skill names to be public, but not theirs levels, so... And I don't need the skill name in all instances ;)
 	public static final String[] skillName = {"Mining", "Digging", "Tree felling", "Woodcutting"};
 	private int[] skillLevel = new int[skillName.length];
 	private int[] passiveExperience = new int[skillName.length];
+	public static int[] passiveModifier;
 	
+	//Called when a new player is found, and we build his properties
 	public AnotherXPPlayerStats(EntityPlayer player){
 		this.player=player;
-		for(int i=0; i<skillName.length; i++)
+		for(int i=0; i<skillName.length; i++){
 			skillLevel[i]=0;
+			passiveExperience[i]=0;
+		}
 	}
 	
 	//Add these properties to a player
@@ -66,6 +72,18 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	@Override
 	public void init(Entity entity, World world) {
 		// TODO Auto-generated method stub
+	}
+	
+	//Setter for the config
+	public static void setPassiveExperienceUsage(boolean b){ isPassiveExperienceActivated=b;}
+	
+	//Setter of the passive experience modifier
+	public static void setPassiveExperienceModifiers(int[] m){
+		if(m.length!=skillName.length){
+			System.out.println("[Another Experience] Wrong numbers of modifiers used for the passive experience modifiers. Using defaults parameters.");
+			passiveModifier = new int[] {50, 30, 0, 15};
+		}
+		else passiveModifier=m;
 	}
 	
 	/**
@@ -139,18 +157,17 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	 * @param amount The amount of experience to add
 	 */
 	public void addPassiveExperience(String skill, int amount){
+		if(!isPassiveExperienceActivated) return;	//Should we use this system ?
+		
 		for(int i=0; i<skillName.length; i++)
 			if(skill.equals(skillName[i])){
 				passiveExperience[i]+=amount;
-				if(passiveExperience[i]>=50){
-					passiveExperience[i]=0;
+				if(passiveExperience[i]>=passiveModifier[i]*(skillLevel[i]+1)*(skillLevel[i]+1)){
 					addStatLevel(skillName[i]);
 					updateClient((EntityPlayerMP) player);
 				}
-				System.out.println("Passive level increased : " + skillName[i] + " - " + passiveExperience[i]);
 				break;
 			}
-		
 	}
 	
 	// - - - - - End of Passive experience related methods - - - - -
@@ -178,11 +195,11 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	 */
 	public float getBreakingSpeed(Block block) {
 		if(block.getHarvestTool(0)=="pickaxe") 
-			return 0.8f+skillLevel[0]*0.03f;	//Mining
+			return 0.8f+skillLevel[0]*0.015f;	//Mining
 		if(block.getHarvestTool(0)=="shovel")
-			return 0.5f+skillLevel[1]*skillLevel[1]*0.05f;	//Digging
+			return 0.5f+skillLevel[1]*0.023f;	//Digging
 		if(block.getHarvestTool(0)=="axe")
-			return 0.7f+skillLevel[3]*0.04f;	//Woodcutting
+			return 0.7f+skillLevel[3]*0.03f;	//Woodcutting
 		
 		return 0f;
 	}

@@ -21,6 +21,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -40,7 +42,6 @@ public class AnotherExperience {
 	//Usefull variables
 	public static final String MODID = "anotherxp";
 	public static final String VERSION = "0.1.0";
-	public static int nbWood = 5;
 	
 	@Instance("anotherxp")
 	public static AnotherExperience instance;
@@ -56,6 +57,15 @@ public class AnotherExperience {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event){
+		//Load config
+		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
+		config.load();
+		
+		AnotherXPPlayerStats.setPassiveExperienceUsage(config.get("Passive Experience", "activated", true, "Sould the passive experience system be used ?").getBoolean());
+		AnotherXPPlayerStats.setPassiveExperienceModifiers(config.get("Passive Experience", "modifiers", new int[] {50, 30, 0, 15}, "The modifiers are as X in this formula, Y is the current level of the skill of the player : X*(Y+1)*(Y+1). Defaults are 50, 30, 0, 15. Null or negative value may act strangely.").getIntList());
+		
+		config.save();
+		
 		//Initialize items
 		AnotherXPItems.init();
 		
