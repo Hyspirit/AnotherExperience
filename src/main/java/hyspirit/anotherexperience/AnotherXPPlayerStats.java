@@ -55,8 +55,10 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	public void saveNBTData(NBTTagCompound compound) {
 		NBTTagCompound p = new NBTTagCompound();
 		
-		for(int i=0; i<skillName.length; i++)
+		for(int i=0; i<skillName.length; i++){
 			p.setInteger(skillName[i], skillLevel[i]);
+			p.setInteger("passive"+skillName[i], passiveExperience[i]);
+		}
 		
 		compound.setTag(PROPERTIES_ID, p);
 	}
@@ -65,8 +67,10 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	public void loadNBTData(NBTTagCompound compound) {
 		NBTTagCompound p = (NBTTagCompound) compound.getTag(PROPERTIES_ID);
 		
-		for(int i=0; i<skillName.length; i++)
+		for(int i=0; i<skillName.length; i++){
 			skillLevel[i] = p.getInteger(skillName[i]);
+			passiveExperience[i] = p.getInteger("passive"+skillName[i]);
+		}
 	}
 
 	@Override
@@ -161,6 +165,7 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 		
 		for(int i=0; i<skillName.length; i++)
 			if(skill.equals(skillName[i])){
+				if(passiveModifier[i]<=0) return;
 				passiveExperience[i]+=amount;
 				if(passiveExperience[i]>=passiveModifier[i]*(skillLevel[i]+1)*(skillLevel[i]+1)){
 					addStatLevel(skillName[i]);
@@ -168,6 +173,32 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 				}
 				break;
 			}
+	}
+	
+	/**
+	 * Allow me to use less functions
+	 * @param stat
+	 * @return the skill level, or -1 if skill does not exist
+	 */
+	public int getPassiveExperience(String stat){
+		
+		for(int i=0; i<skillName.length; i++)
+			if(stat.equals(skillName[i]))
+				return passiveExperience[i];
+		
+		System.out.println("[AnotherExperience] A method sent an unknown skill name to getStatLevel.");
+		return -1;
+	}
+	
+	public void setPassiveExperience(String stat, int level){
+		if(level<0) level = 0;
+		
+		for(int i=0; i<skillName.length; i++)
+			if(stat.equals(skillName[i])){
+				passiveExperience[i] = level;
+				return;
+			}
+		System.out.println("[AnotherExperience] A method sent an unknown skill name to setPassiveExperience.");
 	}
 	
 	// - - - - - End of Passive experience related methods - - - - -

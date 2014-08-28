@@ -62,7 +62,7 @@ public class AnotherExperience {
 		config.load();
 		
 		AnotherXPPlayerStats.setPassiveExperienceUsage(config.get("Passive Experience", "activated", true, "Sould the passive experience system be used ?").getBoolean());
-		AnotherXPPlayerStats.setPassiveExperienceModifiers(config.get("Passive Experience", "modifiers", new int[] {50, 30, 0, 15}, "The modifiers are as X in this formula, Y is the current level of the skill of the player : X*(Y+1)*(Y+1). Defaults are 50, 30, 0, 15. Null or negative value may act strangely.").getIntList());
+		AnotherXPPlayerStats.setPassiveExperienceModifiers(config.get("Passive Experience", "modifiers", new int[] {50, 30, 0, 15}, "The modifiers are as X in this formula, Y is the current level of the skill of the player : X*(Y+1)*(Y+1). Defaults are 50, 30, 0, 15. Null or negative value desactivate passive experience gain for this skill.").getIntList());
 		
 		config.save();
 		

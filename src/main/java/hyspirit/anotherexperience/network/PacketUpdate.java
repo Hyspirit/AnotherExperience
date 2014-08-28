@@ -17,12 +17,15 @@ public class PacketUpdate implements IMessage {
 
 //	private String skill;
 	private int level[] = new int[AnotherXPPlayerStats.skillName.length];
+	private int passiveXP[] = new int[AnotherXPPlayerStats.skillName.length];
 	
 	public PacketUpdate(){}
 	
 	public PacketUpdate(AnotherXPPlayerStats stats){
-		for(int i=0; i<level.length; i++)
+		for(int i=0; i<level.length; i++){
 			level[i] = stats.getStatLevel(AnotherXPPlayerStats.skillName[i]);
+			passiveXP[i] = stats.getPassiveExperience(AnotherXPPlayerStats.skillName[1]);
+		}
 	}
 	
 	@Override
@@ -59,8 +62,10 @@ public class PacketUpdate implements IMessage {
 			System.out.println("[AnotherExperience] Updating player stats from data sent by server.");
 			
 			//Update them
-			for(int i=0; i<message.level.length; i++)
+			for(int i=0; i<message.level.length; i++){
 				stats.setStatLevel(AnotherXPPlayerStats.skillName[i], message.level[i]);
+				stats.setPassiveExperience(AnotherXPPlayerStats.skillName[i], message.passiveXP[i]);
+			}
 			return null;	//No response
 		}
 
