@@ -66,4 +66,9 @@ public class ExperienceStoringItem extends Item{
 	public void addInformation(ItemStack item, EntityPlayer player, List list, boolean b){
 		list.add("Contain " + (getMaxDamage() - item.getItemDamage())*xpPerDurability + " experience");
 	}
+	
+	@Override
+	public boolean hasEffect(ItemStack i){
+		return i.getItemDamage()==0;
+	}
 }

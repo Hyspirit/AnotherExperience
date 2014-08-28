@@ -175,6 +175,16 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 			}
 	}
 	
+	public int getRequiredPassiveToGainLevel(String stat){
+		
+		for(int i=0; i<skillName.length; i++)
+			if(stat.equals(skillName[i]))
+				return passiveModifier[i]*(skillLevel[i]+1)*(skillLevel[i]+1);
+		
+		System.out.println("[AnotherExperience] A method sent an unknown skill name to getRequiredPassiveToGainLevel.");
+		return -1;
+	}
+	
 	/**
 	 * Allow me to use less functions
 	 * @param stat
@@ -232,7 +242,7 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 		if(block.getHarvestTool(0)=="axe")
 			return 0.7f+skillLevel[3]*0.03f;	//Woodcutting
 		
-		return 0f;
+		return 1f;
 	}
 
 }

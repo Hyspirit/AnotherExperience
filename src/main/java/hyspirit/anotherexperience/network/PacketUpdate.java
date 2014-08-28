@@ -24,26 +24,30 @@ public class PacketUpdate implements IMessage {
 	public PacketUpdate(AnotherXPPlayerStats stats){
 		for(int i=0; i<level.length; i++){
 			level[i] = stats.getStatLevel(AnotherXPPlayerStats.skillName[i]);
-			passiveXP[i] = stats.getPassiveExperience(AnotherXPPlayerStats.skillName[1]);
+			passiveXP[i] = stats.getPassiveExperience(AnotherXPPlayerStats.skillName[i]);
 		}
 	}
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		for(int i=0; i<level.length; i++)
+		for(int i=0; i<level.length; i++){
 			level[i] = buf.readInt();
+			passiveXP[i] = buf.readInt();
+		}
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		for(int i=0; i<level.length; i++)
+		for(int i=0; i<level.length; i++){
 			buf.writeInt(level[i]);
+			buf.writeInt(passiveXP[i]);
+		}
 	}
 	
 	public String toString(){
 		String s = "{";
 		for(int i=0; i<level.length; i++)
-			s+="[" + AnotherXPPlayerStats.skillName[i] + ", " + level[i] + "]";
+			s+="[" + AnotherXPPlayerStats.skillName[i] + ", " + level[i] + "(" + passiveXP[i] + ")]";
 		return s+"}";
 	}
 	

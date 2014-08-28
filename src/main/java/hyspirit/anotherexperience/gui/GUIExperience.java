@@ -32,6 +32,7 @@ public class GUIExperience extends GuiScreen {
 			button.enabled=stats.canUpgrade(stats.skillName[i]);
 			buttonList.add(button);
 			
+			
 			if(++i>=stats.skillName.length) break;
 			
 			button = new GuiButton(i, width/2+width/10, 10+(i-1)*30, width/3, 20, stats.skillName[i] + " (" + stats.getStatLevel(stats.skillName[i]) + ")");
@@ -45,6 +46,28 @@ public class GUIExperience extends GuiScreen {
 		
 		//Draw all the buttons
 		super.drawScreen(x, y, par3);
+		
+		//Draw passive experience progress
+		AnotherXPPlayerStats stats = AnotherXPPlayerStats.getPlayerStats(Minecraft.getMinecraft().thePlayer);
+		
+//		this.drawRect(10*30+20, 10, 10*30+20+200, 15, 0xFF000000);
+//		this.drawRect(10*30+21, 11, 10*30+21+19, 14, 0xFFFF0000);
+		
+//		this.drawRect(width/10, 10+0*30+20, width/10+width/3, 10+0*30+20+width/3, 0xFF000000);
+		this.drawRect(width/10, 30, width/10+width/3, 30+10, 0xFF000000);
+//		this.drawRect(width/10+1, 31, width/10+stats.getPassiveExperience("Mining")*100/stats.getRequiredPassiveToGainLevel("Mining")*(width/3), 40, 0xFFFF0000);
+		this.drawRect(width/10+1, 31, width/10+stats.getPassiveExperience("Mining"), 40, 0xFFFF0000);
+		System.out.println(stats.getPassiveExperience("Mining"));
+		
+//		for(int i=0; i<stats.skillName.length; i++){
+//			GuiButton(i, width/10, 10+i*30, width/3, 20, stats.skillName[i] + " (" + stats.getStatLevel(stats.skillName[i]) + ")");
+//			this.drawRect(width/10, 10+i*30+20, width/10+width/3, 10+i*30+20+width/3, 0xFF000000);
+//			
+//			if(++i>=stats.skillName.length) break;
+//			
+//			this.drawRect(width/2+width/10, 10+(i-1)*30+20, width/10+width/3, 10+(i-1)*30+20+width/3, 0xFF000000);
+//			GuiButton(i, width/2+width/10, 10+(i-1)*30, width/3, 20, stats.skillName[i] + " (" + stats.getStatLevel(stats.skillName[i]) + ")");
+//		}
 	}
 	
 	public boolean doesGuiPauseGame(){
