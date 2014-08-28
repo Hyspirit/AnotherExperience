@@ -101,7 +101,7 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 			if(stat.equals(skillName[i]))
 				return skillLevel[i];
 		
-		System.out.println("[AnotherExperience] A method sent an unknown skill name to getStatLevel.");
+		System.out.println("[AnotherExperience] A method sent an unknown skill name to getStatLevel : <" + stat + ">");
 		return -1;
 	}
 	
@@ -113,7 +113,7 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 				skillLevel[i] = level;
 				return;
 			}
-		System.out.println("[AnotherExperience] A method sent an unknown skill name to setStatLevel.");
+		System.out.println("[AnotherExperience] A method sent an unknown skill name to setStatLevel : <" + stat + ">");
 	}
 		
 	/**
@@ -126,7 +126,7 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 				skillLevel[i]++;
 				return;
 			}
-		System.out.println("[AnotherExperience] A method sent an unknown skill name to addStatLevel.");
+		System.out.println("[AnotherExperience] A method sent an unknown skill name to addStatLevel : <" + stat + ">");
 	}
 	
 	/**
@@ -150,7 +150,7 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	 * @return True if the skill may be upgraded with player's current xp
 	 */
 	public boolean canUpgrade(String skill) {
-		return getStatLevel(skill)+1 <= player.experienceLevel;
+		return getStatLevel(skill) < player.experienceLevel;
 	}
 
 	
@@ -169,6 +169,7 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 				passiveExperience[i]+=amount;
 				if(passiveExperience[i]>=passiveModifier[i]*(skillLevel[i]+1)*(skillLevel[i]+1)){
 					addStatLevel(skillName[i]);
+					passiveExperience[i]=0;
 					updateClient((EntityPlayerMP) player);
 				}
 				break;

@@ -28,21 +28,21 @@ public class GUIExperience extends GuiScreen {
 		buttonList.add(button);
 		
 		for(int i=0; i<stats.skillName.length; i++){
-			button = new GuiButton(i, width/10, 10+i*30, width/3, 20, stats.skillName[i] + " (" + stats.getStatLevel(stats.skillName[i]) + ")");
+			button = new GuiButton(i, width/10, 10+i*30, width/3, 20, stats.skillName[i] + " (" + stats.getStatLevel(stats.skillName[i]) + ") - (" + stats.getPassiveExperience(stats.skillName[i]) + "/" + stats.getRequiredPassiveToGainLevel(stats.skillName[i]) + ")");
 			button.enabled=stats.canUpgrade(stats.skillName[i]);
 			buttonList.add(button);
 			
-			
 			if(++i>=stats.skillName.length) break;
 			
-			button = new GuiButton(i, width/2+width/10, 10+(i-1)*30, width/3, 20, stats.skillName[i] + " (" + stats.getStatLevel(stats.skillName[i]) + ")");
+			button = new GuiButton(i, width/2+width/10, 10+(i-1)*30, width/3, 20, stats.skillName[i] + " (" + stats.getStatLevel(stats.skillName[i]) + ") - (" + stats.getPassiveExperience(stats.skillName[i]) + "/" + stats.getRequiredPassiveToGainLevel(stats.skillName[i]) + ")");
 			button.enabled=stats.canUpgrade(stats.skillName[i]);
 			buttonList.add(button);
 		}
 	}
-	
+
 	public void drawScreen(int x, int y, float par3){
 		drawDefaultBackground();
+		initGui();	// I should change this... initGui is called only once sometimes, and drawScreen is ticking...
 		
 		//Draw all the buttons
 		super.drawScreen(x, y, par3);
@@ -50,24 +50,22 @@ public class GUIExperience extends GuiScreen {
 		//Draw passive experience progress
 		AnotherXPPlayerStats stats = AnotherXPPlayerStats.getPlayerStats(Minecraft.getMinecraft().thePlayer);
 		
-//		this.drawRect(10*30+20, 10, 10*30+20+200, 15, 0xFF000000);
-//		this.drawRect(10*30+21, 11, 10*30+21+19, 14, 0xFFFF0000);
-		
-//		this.drawRect(width/10, 10+0*30+20, width/10+width/3, 10+0*30+20+width/3, 0xFF000000);
 		this.drawRect(width/10, 30, width/10+width/3, 30+10, 0xFF000000);
-//		this.drawRect(width/10+1, 31, width/10+stats.getPassiveExperience("Mining")*100/stats.getRequiredPassiveToGainLevel("Mining")*(width/3), 40, 0xFFFF0000);
-		this.drawRect(width/10+1, 31, width/10+stats.getPassiveExperience("Mining"), 40, 0xFFFF0000);
-		System.out.println(stats.getPassiveExperience("Mining"));
+		this.drawRect(width/10+1, 31, width/10+stats.getPassiveExperience("Mining"), 39, 0xFFFF0000);
 		
-//		for(int i=0; i<stats.skillName.length; i++){
-//			GuiButton(i, width/10, 10+i*30, width/3, 20, stats.skillName[i] + " (" + stats.getStatLevel(stats.skillName[i]) + ")");
-//			this.drawRect(width/10, 10+i*30+20, width/10+width/3, 10+i*30+20+width/3, 0xFF000000);
-//			
-//			if(++i>=stats.skillName.length) break;
-//			
-//			this.drawRect(width/2+width/10, 10+(i-1)*30+20, width/10+width/3, 10+(i-1)*30+20+width/3, 0xFF000000);
-//			GuiButton(i, width/2+width/10, 10+(i-1)*30, width/3, 20, stats.skillName[i] + " (" + stats.getStatLevel(stats.skillName[i]) + ")");
-//		}
+		for(int i=0; i<stats.skillName.length; i+=2){
+			if(stats.passiveModifier[i]>0){
+				this.drawRect(width/10, 30+i*30, width/10+width/3, 40+i*30, 0xFF000000);
+				this.drawRect(width/10+1, 31+i*30, (int)(width/10+1+(width/3-2)*((float)stats.getPassiveExperience(stats.skillName[i])/(float)stats.getRequiredPassiveToGainLevel(stats.skillName[i]))), 39+i*30, 0xFFFF0000);
+			}
+			
+			if(i+1>=stats.skillName.length) break;
+			
+			if(stats.passiveModifier[i+1]>0){
+				this.drawRect(width/2+width/10, 30+i*30, width/2+width/10+width/3, 40+i*30, 0xFF000000);
+				this.drawRect(width/2+width/10+1, 31+i*30, (int)(width/2+width/10+1+(width/3-2)*((float)stats.getPassiveExperience(stats.skillName[i+1])/(float)stats.getRequiredPassiveToGainLevel(stats.skillName[i+1]))), 39+i*30, 0xFFFF0000);
+			}
+		}
 	}
 	
 	public boolean doesGuiPauseGame(){

@@ -79,6 +79,7 @@ public class AnotherExperience {
 		network = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 		network.registerMessage(PacketSkillUpgrade.PacketHandler.class, PacketSkillUpgrade.class, 0, Side.SERVER);
 		network.registerMessage(PacketUpdate.PacketHandler.class, PacketUpdate.class, 1, Side.CLIENT);
+		network.registerMessage(PacketAskForUpdate.PacketHandler.class, PacketAskForUpdate.class, 2, Side.SERVER);
 	}
 	
 	@EventHandler
