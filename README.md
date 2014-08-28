@@ -11,6 +11,9 @@ What is already inside :
      * Digging : Dig out all this dirt !
      * Tree felling : Cut all those trees faster !
      * Woodcutting : chop this log at breakneck speed !
+ * Leveling :
+     * Use vanilla experience or...
+     * Passive experience system : Mine to get minning levels !
  * Item :
      * Keeping orb : this orb can store up to 255 experience points, but storing them will cost a small extra fee...
  * Bloc :
@@ -19,6 +22,6 @@ What is already inside :
 Planned : 
 --------
  * Some more items to store experience
- * Gain of experience... Through experience (aka. mine to get experience into Mining...)
  * More skills
  * Skill tree (No tree felling before woodcutting level X)
+ * Maybe a container that slowly collect experience
