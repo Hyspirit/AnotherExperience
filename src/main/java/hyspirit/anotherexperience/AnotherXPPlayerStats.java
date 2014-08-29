@@ -24,7 +24,11 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	
 	private final EntityPlayer player;
 	
+	//Config
 	private static boolean isPassiveExperienceActivated;
+	private static boolean oldLeveling;
+	private static int vanillaXPConsumption;
+	private static float vanillaXPModifier;
 	
 	//I want the skill names to be public, but not theirs levels, so... And I don't need the skill name in all instances ;)
 	public static final String[] skillName = {"Mining", "Digging", "Tree felling", "Woodcutting"};
@@ -77,9 +81,6 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	public void init(Entity entity, World world) {
 		// TODO Auto-generated method stub
 	}
-	
-	//Setter for the config
-	public static void setPassiveExperienceUsage(boolean b){ isPassiveExperienceActivated=b;}
 	
 	//Setter of the passive experience modifier
 	public static void setPassiveExperienceModifiers(int[] m){
@@ -137,10 +138,15 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	public boolean upgradeSkill(String skill){
 		if(!canUpgrade(skill)) return false;
 		
-		//Reduce the level of the player by the level of the skill +1
-		player.addExperienceLevel(-getStatLevel(skill)-1);
-		addStatLevel(skill);
-		
+		if(oldLeveling){
+			//Reduce the level of the player by the level of the skill +1
+			player.addExperienceLevel(-getStatLevel(skill)-1);
+			addStatLevel(skill);
+		}
+		else{
+			AnotherExperience.removeExperience(vanillaXPConsumption, player);
+			addPassiveExperience(skill, (int) (vanillaXPConsumption*vanillaXPModifier));
+		}
 		return true;
 	}
 
@@ -150,7 +156,7 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	 * @return True if the skill may be upgraded with player's current xp
 	 */
 	public boolean canUpgrade(String skill) {
-		return getStatLevel(skill) < player.experienceLevel;
+		return oldLeveling ? getStatLevel(skill) < player.experienceLevel : player.experienceTotal>=vanillaXPConsumption;
 	}
 
 	
@@ -161,23 +167,23 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 	 * @param amount The amount of experience to add
 	 */
 	public void addPassiveExperience(String skill, int amount){
-		if(!isPassiveExperienceActivated) return;	//Should we use this system ?
-		
 		for(int i=0; i<skillName.length; i++)
 			if(skill.equals(skillName[i])){
 				if(passiveModifier[i]<=0) return;
-				passiveExperience[i]+=amount;
-				if(passiveExperience[i]>=passiveModifier[i]*(skillLevel[i]+1)*(skillLevel[i]+1)){
-					addStatLevel(skillName[i]);
-					passiveExperience[i]=0;
-					updateClient((EntityPlayerMP) player);
+				
+				for(int j=0; j<amount; j++){
+					passiveExperience[i]++;
+					if(passiveExperience[i]>=passiveModifier[i]*(skillLevel[i]+1)*(skillLevel[i]+1)){
+						addStatLevel(skillName[i]);
+						passiveExperience[i]=0;
+						updateClient((EntityPlayerMP) player);
+					}
 				}
 				break;
 			}
 	}
 	
 	public int getRequiredPassiveToGainLevel(String stat){
-		
 		for(int i=0; i<skillName.length; i++)
 			if(stat.equals(skillName[i]))
 				return passiveModifier[i]*(skillLevel[i]+1)*(skillLevel[i]+1);
@@ -212,7 +218,33 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 		System.out.println("[AnotherExperience] A method sent an unknown skill name to setPassiveExperience.");
 	}
 	
+	//Configuration for passive experience
+	public static void setPassiveExperienceUsage(boolean b){ isPassiveExperienceActivated=b;}
+	public static boolean isPassiveExperienceUsed(){return isPassiveExperienceActivated;}
+	
 	// - - - - - End of Passive experience related methods - - - - -
+	
+	//Configuration for oldLeveling
+	public static void setOldLeveling(boolean b){oldLeveling=b;}
+	public static boolean isOldLeveling(){return oldLeveling;}
+	
+	//Configuration for vanilla experience into passive experience
+	public static void setVanillaXPConsumption(int value){
+		if(value > 0) vanillaXPConsumption = value;
+		else{
+			System.out.println("[AnotherExperience] vanillaXPConsumption value is negative or null. Using default parameter : 10.");
+			vanillaXPConsumption = 10;
+		}
+	}
+	public static int getVanillaXPConsumption(){return vanillaXPConsumption;}
+	public static void setVanillaXPModifier(float value){
+		if(value > 0f) vanillaXPModifier = value;
+		else{
+			System.out.println("[AnotherExperience] vanillaXPModifier value is negative or null. Using default parameter : 1.5.");
+			vanillaXPModifier = 1.5f;
+		}
+	}
+	public static float getVanillaXPModifier(){return vanillaXPModifier;}
 	
 	/**
 	 * Update the client with his correct stats.

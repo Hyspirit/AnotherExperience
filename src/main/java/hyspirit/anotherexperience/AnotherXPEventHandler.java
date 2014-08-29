@@ -52,7 +52,7 @@ public class AnotherXPEventHandler {
 		harvestWoodLogs(event);	// Test if the player is harvesting wood, and if so, auto harvest near wood logs.
 		
 		// Now, check which type of block is harvested, and add passive experience to player
-		if(event.block.getHarvestTool(0)==null)return;
+		if(event.block.getHarvestTool(0)==null || !AnotherXPPlayerStats.isPassiveExperienceUsed())return;
 		if(event.block.getHarvestTool(0).equals("pickaxe")) AnotherXPPlayerStats.getPlayerStats(event.harvester).addPassiveExperience("Mining", 1);
 		else if(event.block.getHarvestTool(0).equals("shovel")) AnotherXPPlayerStats.getPlayerStats(event.harvester).addPassiveExperience("Digging", 1);
 		else if(event.block.getHarvestTool(0).equals("axe")) AnotherXPPlayerStats.getPlayerStats(event.harvester).addPassiveExperience("Woodcutting", 1);

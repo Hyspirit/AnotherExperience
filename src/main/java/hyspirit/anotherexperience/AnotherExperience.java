@@ -63,6 +63,9 @@ public class AnotherExperience {
 		
 		AnotherXPPlayerStats.setPassiveExperienceUsage(config.get("Passive Experience", "activated", true, "Sould the passive experience system be used ?").getBoolean());
 		AnotherXPPlayerStats.setPassiveExperienceModifiers(config.get("Passive Experience", "modifiers", new int[] {50, 30, 0, 15}, "The modifiers are as X in this formula, Y is the current level of the skill of the player : X*(Y+1)*(Y+1). Defaults are 50, 30, 0, 15. Null or negative value desactivate passive experience gain for this skill.").getIntList());
+		AnotherXPPlayerStats.setOldLeveling(config.getBoolean("Use old leveling system", "activated", false, "The old leveling system consume skillLevel+1 vanilla experience to upgrade a skill. The new one use some vanilla experience points to up a bit the skill."));
+		AnotherXPPlayerStats.setVanillaXPConsumption(config.getInt("Vanilla experience consumed", "modifiers", 10, 1, 255, "The amount set will be consumed when the player want to transfer vanilla experience to passive experience."));
+		AnotherXPPlayerStats.setVanillaXPModifier(config.getFloat("Vanilla experience multiplicator", "modifiers", 1.5f, 0.1f, 1000f, "This value will be multiplied by amount of consumed experience, then added to passive experience."));
 		
 		config.save();
 		
