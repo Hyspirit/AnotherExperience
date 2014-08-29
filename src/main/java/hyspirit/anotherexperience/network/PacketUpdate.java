@@ -8,7 +8,6 @@ package hyspirit.anotherexperience.network;
 import net.minecraft.client.Minecraft;
 import hyspirit.anotherexperience.AnotherXPPlayerStats;
 import io.netty.buffer.ByteBuf;
-import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;

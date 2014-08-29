@@ -7,7 +7,6 @@
  */
 package hyspirit.anotherexperience.network;
 
-import net.minecraft.client.Minecraft;
 import hyspirit.anotherexperience.AnotherXPPlayerStats;
 import io.netty.buffer.ByteBuf;
 import cpw.mods.fml.common.network.ByteBufUtils;
