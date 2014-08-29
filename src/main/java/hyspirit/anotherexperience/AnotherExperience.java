@@ -41,7 +41,7 @@ import cpw.mods.fml.relauncher.Side;
 public class AnotherExperience {
 	//Usefull variables
 	public static final String MODID = "anotherxp";
-	public static final String VERSION = "0.1.0";
+	public static final String VERSION = "0.1.2";
 	
 	@Instance("anotherxp")
 	public static AnotherExperience instance;
@@ -80,9 +80,11 @@ public class AnotherExperience {
 		
 		//Network part
 		network = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
-		network.registerMessage(PacketSkillUpgrade.PacketHandler.class, PacketSkillUpgrade.class, 0, Side.SERVER);
-		network.registerMessage(PacketUpdate.PacketHandler.class, PacketUpdate.class, 1, Side.CLIENT);
+		if(event.getSide()==Side.CLIENT) network.registerMessage(PacketUpdate.PacketHandler.class, PacketUpdate.class, 1, Side.CLIENT);
+		
 		network.registerMessage(PacketAskForUpdate.PacketHandler.class, PacketAskForUpdate.class, 2, Side.SERVER);
+		network.registerMessage(PacketSkillUpgrade.PacketHandler.class, PacketSkillUpgrade.class, 0, Side.SERVER);
+		
 	}
 	
 	@EventHandler

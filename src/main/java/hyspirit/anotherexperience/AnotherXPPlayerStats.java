@@ -176,7 +176,8 @@ public class AnotherXPPlayerStats implements IExtendedEntityProperties{
 					if(passiveExperience[i]>=passiveModifier[i]*(skillLevel[i]+1)*(skillLevel[i]+1)){
 						addStatLevel(skillName[i]);
 						passiveExperience[i]=0;
-						updateClient((EntityPlayerMP) player);
+						if(player instanceof EntityPlayerMP)
+							updateClient((EntityPlayerMP) player);
 					}
 				}
 				break;
