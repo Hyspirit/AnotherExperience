@@ -17,6 +17,7 @@ public class GUIExperience extends GuiScreen {
 	
 	public GUIExperience(){}
 	
+	@Override
 	public void initGui(){
 		AnotherXPPlayerStats stats = AnotherXPPlayerStats.getPlayerStats(Minecraft.getMinecraft().thePlayer);
 		
@@ -28,18 +29,21 @@ public class GUIExperience extends GuiScreen {
 		buttonList.add(button);
 		
 		for(int i=0; i<stats.skillName.length; i++){
-			button = new GuiButton(i, width/10, 10+i*30, width/3, 20, stats.skillName[i] + " (" + stats.getStatLevel(stats.skillName[i]) + ") - (" + stats.getPassiveExperience(stats.skillName[i]) + "/" + stats.getRequiredPassiveToGainLevel(stats.skillName[i]) + ")");
+			if(stats.getRequiredPassiveToGainLevel(stats.skillName[i])>0) button = new GuiButton(i, width/10, 10+i*30, width/3, 20, stats.skillName[i] + " (" + stats.getStatLevel(stats.skillName[i]) + ") - (" + stats.getPassiveExperience(stats.skillName[i]) + "/" + stats.getRequiredPassiveToGainLevel(stats.skillName[i]) + ")");
+			else button = new GuiButton(i, width/10, 10+i*30, width/3, 20, stats.skillName[i] + " (" + stats.getStatLevel(stats.skillName[i]) + ")");
 			button.enabled=stats.canUpgrade(stats.skillName[i]);
 			buttonList.add(button);
 			
 			if(++i>=stats.skillName.length) break;
 			
-			button = new GuiButton(i, width/2+width/10, 10+(i-1)*30, width/3, 20, stats.skillName[i] + " (" + stats.getStatLevel(stats.skillName[i]) + ") - (" + stats.getPassiveExperience(stats.skillName[i]) + "/" + stats.getRequiredPassiveToGainLevel(stats.skillName[i]) + ")");
+			if(stats.getRequiredPassiveToGainLevel(stats.skillName[i])>0) button = new GuiButton(i, width/2+width/10, 10+(i-1)*30, width/3, 20, stats.skillName[i] + " (" + stats.getStatLevel(stats.skillName[i]) + ") - (" + stats.getPassiveExperience(stats.skillName[i]) + "/" + stats.getRequiredPassiveToGainLevel(stats.skillName[i]) + ")");
+			else button = new GuiButton(i, width/10, 10+(i-1)*30, width/3, 20, stats.skillName[i] + " (" + stats.getStatLevel(stats.skillName[i]) + ")");
 			button.enabled=stats.canUpgrade(stats.skillName[i]);
 			buttonList.add(button);
 		}
 	}
 
+	@Override
 	public void drawScreen(int x, int y, float par3){
 		drawDefaultBackground();
 		initGui();	// I should change this... initGui is called only once sometimes, and drawScreen is ticking...
@@ -49,9 +53,6 @@ public class GUIExperience extends GuiScreen {
 		
 		//Draw passive experience progress
 		AnotherXPPlayerStats stats = AnotherXPPlayerStats.getPlayerStats(Minecraft.getMinecraft().thePlayer);
-		
-		this.drawRect(width/10, 30, width/10+width/3, 30+10, 0xFF000000);
-		this.drawRect(width/10+1, 31, width/10+stats.getPassiveExperience("Mining"), 39, 0xFFFF0000);
 		
 		for(int i=0; i<stats.skillName.length; i+=2){
 			if(stats.passiveModifier[i]>0){
@@ -68,10 +69,12 @@ public class GUIExperience extends GuiScreen {
 		}
 	}
 	
+	@Override
 	public boolean doesGuiPauseGame(){
 		return false;
 	}
 	
+	@Override
 	public void actionPerformed(GuiButton button){
 		AnotherXPPlayerStats stats = (AnotherXPPlayerStats) Minecraft.getMinecraft().thePlayer.getExtendedProperties(AnotherXPPlayerStats.PROPERTIES_ID);
 		String skill;
