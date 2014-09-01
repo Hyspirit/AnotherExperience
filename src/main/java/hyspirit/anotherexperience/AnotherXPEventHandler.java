@@ -138,11 +138,15 @@ public class AnotherXPEventHandler {
 		if(!(e.entity instanceof EntityPlayerMP) || e.world.isRemote) return;
 		
 		AnotherXPPlayerStats stat = AnotherExperience.deadStats.remove(e.entity.getCommandSenderName());
+		AnotherXPPlayerStats playerStats = AnotherXPPlayerStats.getPlayerStats((EntityPlayer) e.entity);
 		
 		//Check if player was dead, if he was, then load properties.
 		if(stat != null)
-			AnotherXPPlayerStats.getPlayerStats((EntityPlayer) e.entity).setStatLevel("Mining", stat.getStatLevel("Mining"));
-		
+			for(int i=0; i<AnotherXPPlayerStats.skillName.length; i++){
+				playerStats.setStatLevel(AnotherXPPlayerStats.skillName[i], stat.getStatLevel(AnotherXPPlayerStats.skillName[i]));
+				playerStats.setPassiveExperience(AnotherXPPlayerStats.skillName[i], stat.getPassiveExperience(AnotherXPPlayerStats.skillName[i]));
+			}
+			
 		//Finally, update the client
 		AnotherXPPlayerStats.getPlayerStats((EntityPlayer) e.entity).updateClient((EntityPlayerMP) e.entity);
 	}
